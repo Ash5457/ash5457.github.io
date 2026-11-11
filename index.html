@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akash Bahl, IT Support</title>
+<meta name="description" content="Akash Bahl is a CompTIA A+ certified IT support candidate in Keswick, Ontario. Case files from his home lab: an Active Directory migration, secure remote access, and Fedora hardening, each with the evidence attached.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Akash Bahl, IT Support">
+<meta property="og:description" content="CompTIA A+ certified, based in Keswick, Ontario. Home lab case files with the evidence attached: an Active Directory migration, secure remote access, and Fedora hardening.">
+<meta property="og:locale" content="en_CA">
+<meta property="og:url" content="https://ash5457.github.io/">
+<meta property="og:image" content="https://ash5457.github.io/assets/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/RedHatDisplay-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/RedHatText-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Layout: left-aligned case file. One statement headline, then the fastfetch
+   terminal as the single terminal object per section. Sans for reading,
+   mono only where a terminal would really print it. */
+@font-face{font-family:"Red Hat Display";src:url("assets/fonts/RedHatDisplay-latin.woff2") format("woff2");font-weight:300 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Red Hat Text";src:url("assets/fonts/RedHatText-latin.woff2") format("woff2");font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:"Red Hat Mono";src:url("assets/fonts/RedHatMono-latin.woff2") format("woff2");font-weight:300 700;font-style:normal;font-display:swap}
+
+:root{
+  color-scheme:dark;
+  /* color: the GitHub dark palette already used by the profile header */
+  --bg:#0d1117;
+  --surface:#161b22;
+  --line:#30363d;
+  --text:#c9d1d9;
+  --strong:#f0f6fc;
+  --muted:#8b949e;
+  --green:#3fb950;
+  --green-hi:#56d364;
+  --teal:#39c5cf;
+  --blue:#58a6ff;
+  --amber:#d29922;
+  --red:#f85149;
+  --purple:#bc8cff;
+  --slate:#484f58;
+  --silver:#b1bac4;
+  /* type */
+  --display:"Red Hat Display","Segoe UI",system-ui,sans-serif;
+  --body:"Red Hat Text","Segoe UI",system-ui,sans-serif;
+  --mono:"Red Hat Mono","DejaVu Sans Mono",Menlo,Consolas,monospace;
+  --fs-h1:clamp(2.35rem,1.2rem + 4.6vw,4.5rem);
+  --fs-h2:clamp(1.75rem,1.3rem + 1.8vw,2.5rem);
+  --fs-h3:1.375rem;
+  --fs-body:1.0625rem;
+  --fs-small:.9375rem;
+  --fs-mono:.9375rem;
+  /* space: 4px base */
+  --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4.5rem;--s9:7rem;
+  --wrap:73.75rem;
+  --radius:6px;
+  --radius-window:10px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--line) var(--bg)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:var(--fs-body);line-height:1.62;font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg{display:block;max-width:100%}
+img{height:auto}
+::selection{background:var(--green);color:var(--bg)}
+a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px}
+h1,h2,h3,h4{font-family:var(--display);color:var(--strong);margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-left:max(1.25rem,env(safe-area-inset-left,0px));padding-right:max(1.25rem,env(safe-area-inset-right,0px))}
+.skip{position:absolute;left:1rem;top:-4rem;background:var(--green);color:var(--bg);padding:var(--s2) var(--s4);border-radius:var(--radius);font-weight:600;z-index:20}
+.skip:focus{top:1rem}
+
+/* ---- site header ---- */
+.site-head{border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;padding-block:var(--s4)}
+.brand{display:flex;align-items:center;gap:var(--s3);color:var(--strong);text-decoration:none;font-family:var(--display);font-weight:600;font-size:1.0625rem;letter-spacing:-.01em}
+.brand svg{width:3.1rem;height:auto;flex:none}
+.site-nav{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap;font-size:var(--fs-small)}
+.site-nav a{color:var(--text);text-decoration:none;padding-block:var(--s2)}
+.site-nav a:hover{color:var(--strong);text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px}
+.site-nav .ext{color:var(--muted)}
+.site-nav .sep{width:1px;height:1.1rem;background:var(--line)}
+
+/* ---- hero ---- */
+.hero{padding-block:clamp(2.5rem,6vw,5.5rem) clamp(3rem,7vw,6rem)}
+.hero h1{font-size:var(--fs-h1);line-height:1.03;font-weight:700;letter-spacing:-.032em;max-width:17.5em}
+@media (min-width:56.01rem){.hero h1 span{display:block}}
+.hero-grid{display:grid;grid-template-columns:minmax(0,3.5fr) minmax(0,8.5fr);gap:clamp(1.75rem,4vw,4rem);align-items:start;margin-top:clamp(2rem,4.5vw,3.75rem)}
+.lead{font-size:1.1875rem;line-height:1.55;color:var(--text);max-width:34ch}
+.lead strong{color:var(--strong);font-weight:600}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4) var(--s5);margin-top:var(--s6)}
+.btn{display:inline-block;background:var(--green);color:var(--bg);font-weight:700;font-size:1rem;text-decoration:none;padding:.72rem 1.15rem;border-radius:var(--radius);transition:background-color .18s var(--ease),transform .18s var(--ease)}
+.btn:hover{background:var(--green-hi)}
+.btn:active{transform:translateY(1px)}
+.mail{font-family:var(--mono);font-size:var(--fs-mono);color:var(--text)}
+
+/* ---- terminal window: the one recurring terminal object ---- */
+.term{border:1px solid var(--line);border-radius:var(--radius-window);background:var(--bg);overflow:hidden;min-width:0}
+.term-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--surface);border-bottom:1px solid var(--line);padding:.55rem .9rem;font-family:var(--mono);font-size:.8125rem;color:var(--muted)}
+.term-bar .title{grid-column:2}
+.term-bar .dots{grid-column:3;justify-self:end;display:flex;gap:.45rem}
+.term-bar .dots i{width:.7rem;height:.7rem;border-radius:50%;background:var(--slate)}
+.term-bar .dots i:last-child{background:var(--red)}
+.term-body{padding:clamp(1rem,2.4vw,1.6rem);font-family:var(--mono);font-size:var(--fs-mono);line-height:1.55}
+.prompt{margin:0 0 var(--s4);color:var(--strong);white-space:nowrap;overflow:hidden}
+.prompt b{color:var(--green);font-weight:700}
+.prompt .path{color:var(--blue)}
+.fetch{display:grid;grid-template-columns:clamp(7.5rem,16vw,11.5rem) minmax(0,1fr);gap:clamp(1rem,2.6vw,2rem);align-items:start}
+.fetch picture,.fetch img{border-radius:4px}
+.fetch img{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--surface)}
+.fetch-info{min-width:0}
+.fetch-id{color:var(--green);font-weight:700;margin:0}
+.fetch-id a{color:var(--green-hi);text-decoration:none}
+.fetch-id a:hover{text-decoration:underline}
+.fetch-rule{height:1px;width:11ch;background:var(--slate);margin:.5rem 0 .65rem}
+.fetch dl{display:grid;grid-template-columns:7.5ch minmax(0,1fr);gap:.3rem 0;margin:0;font-size:.875rem;word-spacing:-.12em}
+.fetch dt{color:var(--green);font-weight:700}
+.fetch dd{margin:0;color:var(--text)}
+.fetch .ok{color:var(--green)}
+.fetch .next{color:var(--amber)}
+.dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--green);margin-right:.5ch;vertical-align:.02em}
+.swatches{display:flex;gap:.3rem;margin-top:1.1rem}
+.swatches i{width:1.9rem;height:.95rem;border-radius:2px}
+
+/* load sequence: the command types, then the output prints row by row.
+   Runs only when motion is welcome; resting state is fully visible. */
+@media (prefers-reduced-motion:no-preference){
+  .prompt .cmd{display:inline-block;vertical-align:bottom;overflow:hidden;white-space:nowrap;width:9ch;animation:type .55s steps(9,end) .35s both}
+  .fetch>*,.fetch dl>*{animation:print .01s linear both;animation-delay:calc(1s + var(--i,0) * 85ms)}
+  @keyframes type{from{width:0}}
+  @keyframes print{from{opacity:0}}
+}
+
+@media (max-width:56rem){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}
+  .lead{max-width:44ch}
+}
+@media (max-width:34rem){
+  .site-nav{gap:var(--s5);width:100%}
+  .site-nav .sep,.site-nav .ext{display:none}
+  .term-bar{padding:.5rem .7rem;grid-template-columns:minmax(0,1fr) auto;gap:.75rem}
+  .term-bar .title{grid-column:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .term-bar .dots{grid-column:2}
+  .prompt{white-space:normal;overflow-wrap:anywhere}
+  .fetch{grid-template-columns:5.5rem minmax(0,1fr);align-items:center;gap:1rem}
+  .fetch-info{display:contents}
+  .fetch-rule{display:none}
+  .fetch dl,.swatches{grid-column:1/-1}
+  .swatches{margin-top:0}
+  .fetch dl{grid-template-columns:minmax(0,1fr);gap:0}
+  .fetch dd{margin-bottom:.55rem}
+  .swatches i{width:1.5rem}
+}
+
+/* ---- case files ---- */
+code{font-family:var(--mono);font-size:.92em;color:var(--strong)}
+.work{border-top:1px solid var(--line)}
+.case{padding-block:clamp(3.5rem,8vw,6.5rem)}
+.case + .case{border-top:1px solid var(--line)}
+.case-head h2{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.025em;line-height:1.1;max-width:21em}
+.case-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem 1.4rem;margin:var(--s4) 0 0;padding:0;list-style:none;font-size:var(--fs-small);color:var(--muted)}
+.case-meta .state{color:var(--text)}
+.case-meta .state.wip .dot{background:var(--amber)}
+.case-lead{margin-top:var(--s5);max-width:62ch;font-size:1.125rem}
+.case .term{margin-top:var(--s7)}
+.summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,25rem);gap:var(--s6) var(--s7);align-items:start}
+.summary dl{display:grid;grid-template-columns:9ch minmax(0,1fr);gap:.45rem 0;margin:0;word-spacing:-.1em}
+.summary dt{color:var(--green);font-weight:700}
+.summary dd{margin:0}
+.diagram{margin:0;min-width:0}
+.diagram svg{width:100%;height:auto}
+.diagram text{font-family:var(--mono);fill:var(--text)}
+.diagram .name{font-weight:700;fill:var(--strong);font-size:15px}
+.diagram .sub{fill:var(--muted);font-size:12px}
+.diagram .lbl{font-size:12px}
+.case h3{font-size:var(--fs-h3);font-weight:600;letter-spacing:-.015em;margin-top:clamp(2.75rem,6vw,4.5rem)}
+.case h3 + p{margin-top:var(--s3);max-width:62ch;color:var(--muted)}
+.decisions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s6) var(--s7);margin-top:var(--s5)}
+.decisions h4{font-family:var(--body);font-size:1.0625rem;font-weight:600;color:var(--strong);margin-bottom:var(--s2)}
+.decisions p{max-width:54ch}
+
+.ledger{margin-top:var(--s5);border-top:1px solid var(--line)}
+.ledger-row{display:grid;grid-template-columns:2.5rem minmax(0,4fr) minmax(0,7fr);gap:var(--s5) clamp(1rem,3vw,2.5rem);padding-block:var(--s6);border-bottom:1px solid var(--line);align-items:start}
+.ledger-step{font-family:var(--mono);font-size:var(--fs-mono);color:var(--muted);font-variant-numeric:tabular-nums;padding-top:.15rem}
+.ledger-claim h4{font-family:var(--display);font-size:1.25rem;font-weight:600;letter-spacing:-.012em;line-height:1.25}
+.ledger-claim p{margin-top:var(--s3);max-width:48ch}
+.ledger-cmd{display:inline-block;margin-top:var(--s4);font-family:var(--mono);font-size:.875rem;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:.3rem .6rem;max-width:100%;overflow-wrap:anywhere}
+.ledger-cmd b{color:var(--green);font-weight:700}
+.proof{margin:0;min-width:0}
+.proof a{display:block;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#0c0c0c;transition:border-color .18s var(--ease)}
+.proof a:hover{border-color:var(--green)}
+.proof img{width:100%}
+.proof figcaption{margin-top:var(--s2);font-size:.875rem;color:var(--muted)}
+.more{margin-top:var(--s5);font-size:var(--fs-small)}
+
+.broke{list-style:none;padding:0;margin:var(--s5) 0 0;border-top:1px solid var(--line)}
+.broke>li{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:var(--s4) var(--s7);padding-block:var(--s6);border-bottom:1px solid var(--line)}
+.broke h4{font-family:var(--display);font-size:1.25rem;font-weight:600;letter-spacing:-.012em;line-height:1.25}
+.broke dl{display:grid;grid-template-columns:5.75rem minmax(0,1fr);gap:.7rem 0;margin:0}
+.broke dt{color:var(--muted);font-size:var(--fs-small);padding-top:.1rem}
+.broke dd{margin:0;max-width:58ch}
+
+.takeaway{margin-top:clamp(2.75rem,6vw,4.5rem);max-width:62ch}
+.takeaway strong{display:block;font-family:var(--display);font-size:clamp(1.5rem,1.1rem + 1.4vw,2rem);font-weight:700;letter-spacing:-.022em;line-height:1.15;color:var(--strong);margin-bottom:var(--s3);text-wrap:balance}
+.case-foot{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;margin:var(--s6) 0 0;padding:0;list-style:none}
+.stack{margin-top:var(--s5);font-size:var(--fs-small);color:var(--muted);max-width:70ch}
+
+@media (max-width:56rem){
+  .summary,.decisions,.broke>li{grid-template-columns:minmax(0,1fr)}
+  .diagram{max-width:26rem}
+  .ledger-row{grid-template-columns:2rem minmax(0,1fr)}
+  .proof{grid-column:2}
+}
+@media (max-width:34rem){
+  .summary dl{grid-template-columns:minmax(0,1fr);gap:0}
+  .summary dd{margin-bottom:.55rem}
+  .ledger-row{grid-template-columns:minmax(0,1fr);gap:var(--s3)}
+  .proof{grid-column:1;margin-top:var(--s2)}
+  .broke dl{grid-template-columns:minmax(0,1fr);gap:.15rem 0}
+  .broke dd{margin-bottom:.7rem}
+}
+
+/* ---- collapsible case file ---- */
+.case{padding-block:clamp(3rem,6.5vw,5.25rem)}
+.file{margin-top:var(--s5)}
+.file>summary{list-style:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.25rem var(--s5);padding:.95rem 1.15rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color .18s var(--ease)}
+.file>summary::-webkit-details-marker{display:none}
+.file>summary:hover{border-color:var(--green)}
+.file-label{font-family:var(--display);font-weight:600;font-size:1.0625rem;color:var(--strong)}
+.file-hint{font-size:var(--fs-small);color:var(--muted)}
+.file:not([open]) .when-open,.file[open] .when-closed{display:none}
+.pm{position:relative;width:.9rem;height:.9rem;flex:none}
+.pm::before,.pm::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--green);border-radius:1px;transition:transform .22s var(--ease)}
+.pm::after{transform:rotate(90deg)}
+.file[open] .pm::after{transform:rotate(0)}
+.file-body>h3:first-child{margin-top:clamp(2.25rem,5vw,3.5rem)}
+.file-shut{display:inline-block;margin-top:var(--s7);font:inherit;font-size:var(--fs-small);font-weight:600;color:var(--strong);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:.6rem 1rem;cursor:pointer;transition:border-color .18s var(--ease)}
+.file-shut:hover{border-color:var(--green)}
+@media (prefers-reduced-motion:no-preference){
+  .file[open]>.file-body{animation:unfold .32s var(--ease) both}
+  @keyframes unfold{from{opacity:0;transform:translateY(-6px)}}
+}
+
+/* ledger without step numbers, for claims that are not a sequence */
+.ledger.plain .ledger-row{grid-template-columns:minmax(0,4fr) minmax(0,7fr)}
+
+/* module tracker */
+.modules{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;word-spacing:-.1em}
+.modules li{display:grid;grid-template-columns:.9rem minmax(0,1fr) auto;align-items:baseline;column-gap:.4rem;color:var(--muted)}
+.modules li::before{content:"";width:.5em;height:.5em;border-radius:50%;border:1.5px solid var(--slate);align-self:center}
+.modules li.done::before{background:var(--green);border-color:var(--green)}
+.modules li.done span{color:var(--green)}
+.modules a{color:var(--text);text-decoration-color:var(--slate);justify-self:start}
+
+@media (max-width:56rem){
+  .ledger.plain .ledger-row{grid-template-columns:minmax(0,1fr)}
+  .ledger.plain .proof{grid-column:1}
+}
+@media (max-width:34rem){
+  .file>summary{grid-template-columns:minmax(0,1fr) auto;padding:.85rem 1rem}
+  .file-hint{grid-column:1;grid-row:2}
+  .pm{grid-row:1/3;grid-column:2}
+}
+
+/* case header: title and status at left, the two-sentence summary at right */
+.case{padding-block:clamp(2.75rem,5.5vw,4.25rem)}
+.case-head{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:var(--s5) clamp(2rem,5vw,4.5rem);align-items:end}
+.case-head h2{max-width:none;font-size:clamp(1.6rem,1.15rem + 1.6vw,2.125rem);line-height:1.14}
+.case-lead{margin-top:0;font-size:var(--fs-body);max-width:56ch}
+.case .term{margin-top:var(--s6)}
+@media (max-width:62rem){.case-head{grid-template-columns:minmax(0,1fr)}.case-lead{max-width:62ch}}
+
+/* ---- background, contact, footer ---- */
+.section{padding-block:clamp(3.25rem,7vw,5.75rem);border-top:1px solid var(--line)}
+.section-title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.bg-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:var(--s7) clamp(2rem,6vw,5.5rem);margin-top:var(--s7);align-items:start}
+.bg-grid h3{font-size:var(--fs-h3);font-weight:600;letter-spacing:-.015em}
+.side h3:not(:first-child){margin-top:var(--s7)}
+.roles{list-style:none;margin:var(--s5) 0 0;padding:0;border-top:1px solid var(--line)}
+.roles>li{display:grid;grid-template-columns:10.5rem minmax(0,1fr);gap:var(--s2) var(--s5);padding-block:var(--s6);border-bottom:1px solid var(--line)}
+.when{font-family:var(--mono);font-size:.8125rem;color:var(--muted);padding-top:.32rem;word-spacing:-.12em}
+.roles h4{font-family:var(--display);font-size:1.25rem;font-weight:600;letter-spacing:-.012em;line-height:1.25}
+.org{color:var(--muted);font-size:var(--fs-small);margin-top:.2rem}
+.roles ul{margin:var(--s4) 0 0;padding-left:1.1rem;display:grid;gap:.45rem;max-width:58ch;list-style:disc}
+.roles ul li::marker{color:var(--slate)}
+.creds{list-style:none;margin:var(--s5) 0 0;padding:0;border-top:1px solid var(--line)}
+.creds li{padding-block:var(--s4);border-bottom:1px solid var(--line)}
+.creds b{display:block;color:var(--strong);font-weight:600}
+.creds span{display:block;color:var(--muted);font-size:var(--fs-small);margin-top:.15rem}
+.creds .next span{color:var(--amber)}
+
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s6) clamp(2rem,5vw,4.5rem);align-items:start}
+.contact h2{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.026em;line-height:1.08}
+.contact .lead{margin-top:var(--s5);max-width:40ch}
+.reach{display:grid;grid-template-columns:9.5ch minmax(0,1fr);gap:.5rem 0;margin:0;font-size:.875rem;word-spacing:-.1em}
+.reach dt{color:var(--green);font-weight:700}
+.reach dd{margin:0;overflow-wrap:anywhere}
+.reach a{color:var(--text);text-decoration-color:var(--slate)}
+.reach a:hover{color:var(--strong);text-decoration-color:var(--green)}
+.copy{margin-left:.9ch;font:inherit;font-size:.8125rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:.1rem .5rem;cursor:pointer;word-spacing:normal}
+.copy:hover{color:var(--strong);border-color:var(--green)}
+
+.site-foot{border-top:1px solid var(--line)}
+.site-foot .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s4) var(--s6);padding-block:var(--s6);font-size:var(--fs-small);color:var(--muted)}
+.site-foot .mark{display:flex;align-items:center;gap:var(--s4)}
+.site-foot svg{width:4.25rem;height:auto;flex:none}
+.site-foot nav{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5)}
+.site-foot a{color:var(--text);text-decoration:none}
+.site-foot a:hover{color:var(--strong);text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px}
+
+@media (max-width:56rem){
+  .bg-grid,.contact-grid{grid-template-columns:minmax(0,1fr)}
+  .contact .lead{max-width:52ch}
+}
+@media (max-width:34rem){
+  .roles>li{grid-template-columns:minmax(0,1fr)}
+  .when{padding-top:0}
+  .reach{grid-template-columns:minmax(0,1fr);gap:0}
+  .reach dd{margin-bottom:.6rem}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Akash Bahl, home">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#work">Case files</a>
+      <a href="#background">Background</a>
+      <a href="#contact">Contact</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="ext" href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
+      <a class="ext" href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <h1 id="hero-title"><span>I build on my own hardware,</span> <span>then write up what broke</span> <span>and how I fixed it.</span></h1>
+
+      <div class="hero-grid">
+        <div>
+          <p class="lead"><strong>I'm Akash Bahl</strong>, CompTIA A+ certified and based in Keswick, Ontario. I'm open to help desk, desktop support and field service roles across York Region and the GTA, and available immediately.</p>
+          <div class="actions">
+            <a class="btn" href="#work">Read the case files</a>
+            <a class="mail" href="mailto:akashbahl1926@gmail.com">akashbahl1926@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="term" role="group" aria-label="Summary, shown as terminal output">
+          <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="term-body">
+            <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~</span>$ <span class="cmd">fastfetch</span></p>
+            <div class="fetch">
+              <picture style="--i:0">
+                <source type="image/webp" srcset="assets/images/akash-bahl-320.webp 320w, assets/images/akash-bahl-640.webp 640w" sizes="(max-width:34rem) 88px, 184px">
+                <img src="assets/images/akash-bahl-640.jpg" srcset="assets/images/akash-bahl-320.jpg 320w, assets/images/akash-bahl-640.jpg 640w" sizes="(max-width:34rem) 88px, 184px" width="640" height="800" alt="Akash Bahl, smiling, in glasses and a black t-shirt" fetchpriority="high">
+              </picture>
+              <div class="fetch-info" style="--i:1">
+                <p class="fetch-id">ash@<a href="https://github.com/Ash5457" rel="me noopener">Ash5457</a></p>
+                <div class="fetch-rule" aria-hidden="true"></div>
+                <dl>
+                  <dt style="--i:2">Role</dt><dd style="--i:2">IT Support · Help Desk · Field Service</dd>
+                  <dt style="--i:3">Certs</dt><dd style="--i:3">CompTIA A+ <span class="ok">certified</span> · AZ-104 <span class="next">(next)</span></dd>
+                  <dt style="--i:4">Labs</dt><dd style="--i:4">AD migration · Remote access · Fedora hardening</dd>
+                  <dt style="--i:5">Base</dt><dd style="--i:5">Keswick, ON · York Region and GTA</dd>
+                  <dt style="--i:6">Status</dt><dd style="--i:6"><span class="dot" aria-hidden="true"></span>Open to full-time roles · Available immediately</dd>
+                </dl>
+                <div class="swatches" aria-hidden="true" style="--i:7">
+                  <i style="background:#484f58"></i><i style="background:#f85149"></i><i style="background:#3fb950"></i><i style="background:#d29922"></i><i style="background:#58a6ff"></i><i style="background:#bc8cff"></i><i style="background:#39c5cf"></i><i style="background:#b1bac4"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" id="work" aria-label="Case files">
+
+    <article class="case" id="ad-lab" aria-labelledby="ad-lab-title">
+      <div class="wrap">
+        <header class="case-head">
+<div class="case-title">
+          <h2 id="ad-lab-title">Active Directory lab: a scripted build, then a Server 2016 to 2025 migration</h2>
+          <ul class="case-meta">
+            <li class="state"><span class="dot" aria-hidden="true"></span>Complete</li>
+            <li>October 2026</li>
+            <li><a href="https://github.com/Ash5457/ad-lab" rel="noopener">github.com/Ash5457/ad-lab</a></li>
+          </ul>
+          </div>
+          <p class="case-lead">I built an Active Directory domain from PowerShell scripts, then migrated it side by side from Windows Server 2016 to Server 2025. Each step had a check that had to pass before the next one started, and every claim links to a screenshot or a transcript.</p>
+        </header>
+
+        <div class="term" role="group" aria-label="Project summary, shown as terminal output">
+          <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/ad-lab</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="term-body">
+            <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat ad-lab/SUMMARY</p>
+            <div class="summary">
+              <dl>
+                <dt>Build</dt><dd>PowerShell, rebuilt from the repo</dd>
+                <dt>Migrate</dt><dd>Side by side, all five FSMO roles</dd>
+                <dt>Verify</dt><dd>repadmin · dcdiag · scream test</dd>
+                <dt>Schema</dt><dd>87 to 91, forest at Windows2025</dd>
+                <dt>Log</dt><dd>11 problems, each with root cause and proof</dd>
+                <dt>Host</dt><dd>3 VMs on a 16 GB laptop, VMware Workstation</dd>
+              </dl>
+              <figure class="diagram">
+                <svg viewBox="0 0 420 262" role="img" aria-labelledby="ad-dia-t ad-dia-d">
+                  <title id="ad-dia-t">Lab topology after the migration</title>
+                  <desc id="ad-dia-d">DC01 on Server 2016 handed all five FSMO roles to DC02 on Server 2025 and was demoted. CLIENT01 on Windows 11 logs on and receives Group Policy from DC02. All three sit on an isolated host-only network.</desc>
+                  <defs>
+                    <marker id="ah-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#3fb950"/></marker>
+                    <marker id="ah-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#58a6ff"/></marker>
+                  </defs>
+                  <rect x="1" y="28" width="148" height="66" rx="8" fill="#161b22" stroke="#484f58" stroke-width="1.5"/>
+                  <text x="75" y="57" text-anchor="middle" class="name">DC01</text>
+                  <text x="75" y="77" text-anchor="middle" class="sub">Server 2016</text>
+                  <text x="75" y="114" text-anchor="middle" class="lbl" style="fill:#f85149">demoted</text>
+
+                  <rect x="271" y="28" width="148" height="66" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+                  <text x="345" y="57" text-anchor="middle" class="name" style="fill:#56d364">DC02</text>
+                  <text x="345" y="77" text-anchor="middle" class="sub">Server 2025</text>
+
+                  <path d="M153 61H266" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ah-g)"/>
+                  <text x="210" y="50" text-anchor="middle" class="lbl" style="fill:#3fb950">5 FSMO roles</text>
+
+                  <rect x="271" y="176" width="148" height="66" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                  <text x="345" y="205" text-anchor="middle" class="name" style="fill:#58a6ff">CLIENT01</text>
+                  <text x="345" y="225" text-anchor="middle" class="sub">Windows 11</text>
+
+                  <path d="M345 172V99" fill="none" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#ah-b)"/>
+                  <text x="335" y="140" text-anchor="end" class="lbl" style="fill:#58a6ff">logon + GPO</text>
+
+                  <text x="1" y="205" class="sub">10.1.10.0/24</text>
+                  <text x="1" y="225" class="sub">host-only, no internet</text>
+                </svg>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        <details class="file">
+          <summary><span class="file-label"><span class="when-closed">Open the case file</span><span class="when-open">Close the case file</span></span><span class="file-hint">Decisions, proof and what broke</span><i class="pm" aria-hidden="true"></i></summary>
+          <div class="file-body">
+
+        <h3>Decisions</h3>
+        <div class="decisions">
+          <div>
+            <h4>Side by side, not in place</h4>
+            <p>It is slower than an in-place upgrade and much safer. The old domain controller stays up as a fallback until the new one has proven itself through replication checks, a role transfer and a scream test.</p>
+          </div>
+          <div>
+            <h4>Snapshots in coordinated pairs</h4>
+            <p>Once two domain controllers are replicating, reverting only one to an older snapshot causes a USN rollback, which silently breaks replication. From DC02's promotion onward, both were shut down and snapshotted together.</p>
+          </div>
+        </div>
+
+        <h3>Proof</h3>
+        <p>Four of the twelve migration steps. Each image opens the full, uncropped screenshot on GitHub.</p>
+        <div class="ledger">
+          <div class="ledger-row">
+            <div class="ledger-step"><span aria-hidden="true">04</span></div>
+            <div class="ledger-claim">
+              <h4>Replication healthy in both directions</h4>
+              <p>Zero failures out of five for each domain controller, as a source and as a destination, before any role was moved.</p>
+              <span class="ledger-cmd"><b>PS&gt;</b> repadmin /replsummary</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/ad-lab/blob/main/evidence/06-replsummary.png" rel="noopener"><img src="assets/images/ad-lab-06-replsummary.webp" width="645" height="305" loading="lazy" alt="repadmin /replsummary output on DC02: DC01 and DC02 each show 0 fails out of 5 as source and as destination"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-step"><span aria-hidden="true">08</span></div>
+            <div class="ledger-claim">
+              <h4>All five FSMO roles moved from DC01 to DC02</h4>
+              <p>Queried the role holders, transferred all five in one command, then queried again to confirm every role sits on the Server 2025 domain controller.</p>
+              <span class="ledger-cmd"><b>PS&gt;</b> netdom query fsmo</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/ad-lab/blob/main/evidence/09-fsmo-before-and-after.png" rel="noopener"><img src="assets/images/ad-lab-09-fsmo.webp" width="860" height="435" loading="lazy" alt="PowerShell on DC02: netdom query fsmo lists all five roles on DC01, the move command runs, and a second query lists all five roles on DC02"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-step"><span aria-hidden="true">09</span></div>
+            <div class="ledger-claim">
+              <h4>Scream test passed with DC01 powered off</h4>
+              <p>With the original domain controller switched off, a domain user logged on at the client and Group Policy was applied from DC02.</p>
+              <span class="ledger-cmd"><b>PS&gt;</b> gpresult /r</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/ad-lab/blob/main/evidence/10-client-on-dc02.png" rel="noopener"><img src="assets/images/ad-lab-10-scream-test.webp" width="685" height="405" loading="lazy" alt="gpresult /r on CLIENT01 for user areyes, with the line Group Policy was applied from DC02.deadeye5457.com highlighted"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-step"><span aria-hidden="true">11</span></div>
+            <div class="ledger-claim">
+              <h4>Domain and forest raised to Windows2025</h4>
+              <p>A one-way step, so it came last, after DC01 was demoted and the new domain controller had come through a crash.</p>
+              <span class="ledger-cmd"><b>PS&gt;</b> Get-ADDomain | Format-Table DNSRoot, DomainMode</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/ad-lab/blob/main/evidence/12-funclevel-raised.png" rel="noopener"><img src="assets/images/ad-lab-12-funclevel.webp" width="882" height="260" loading="lazy" alt="Get-ADDomain shows DomainMode Windows2025Domain and Get-ADForest shows ForestMode Windows2025Forest for deadeye5457.com"></a>
+            </figure>
+          </div>
+        </div>
+        <p class="more"><a href="https://github.com/Ash5457/ad-lab#part-2-the-side-by-side-migration" rel="noopener">See all twelve steps with their proof in the README</a></p>
+
+        <h3>What broke</h3>
+        <p>Three of the eleven problems in the troubleshooting log.</p>
+        <ul class="broke">
+          <li>
+            <h4>DC02 blue-screened in the middle of the migration</h4>
+            <dl>
+              <dt>Symptom</dt><dd><code>dcdiag</code> showed DC02 had rebooted from bugcheck <code>0x7A</code>. Its second parameter, <code>0xc0000185</code>, is an I/O device error, which pointed at the host's storage and not at Windows.</dd>
+              <dt>Cause</dt><dd>The VMs live on an external SSD over USB. The drive dropped out for a moment and DC02's virtual disk disappeared mid-read.</dd>
+              <dt>Fix</dt><dd>Turned off USB power management for the port, connected the SSD directly, then checked the Directory Service log for database corruption events before continuing. There were none.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4>dcdiag reported a wall of failures after promotion</h4>
+            <dl>
+              <dt>Symptom</dt><dd>DFSREvent, KccEvent, Services, SystemLog and ObjectsReplicated failed across both domain controllers.</dd>
+              <dt>Cause</dt><dd>Mostly noise from running in a VM, with two real issues mixed in: replication had not caught up, and DC01's firewall blocked remote event-log reads.</dd>
+              <dt>Fix</dt><dd>Sorted every failure into noise or real, fixed the two real ones, and proved it with <code>repadmin</code>, the SYSVOL share and event 4604 before moving any roles.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4>A clean demotion still left stale DNS</h4>
+            <dl>
+              <dt>Symptom</dt><dd>After DC01 was demoted, the <code>_msdcs</code> delegation still named it as the only name server.</dd>
+              <dt>Cause</dt><dd>The delegation was created with the forest on DC01, and nothing updated it when DC02 was promoted.</dd>
+              <dt>Fix</dt><dd>Added a delegation to DC02, removed the DC01 record, and confirmed that no NS or SRV record references the old domain controller.</dd>
+            </dl>
+          </li>
+        </ul>
+        <p class="more"><a href="https://github.com/Ash5457/ad-lab/blob/main/TROUBLESHOOTING.md" rel="noopener">Read all eleven in the troubleshooting log</a></p>
+
+        <p class="takeaway"><strong>Verify before every irreversible step, and keep a way back.</strong>I didn't move roles until replication was proven, didn't demote until the scream test passed, and didn't raise the functional level until the new domain controller had come through a crash.</p>
+
+        <ul class="case-foot">
+          <li><a href="https://github.com/Ash5457/ad-lab" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/Ash5457/ad-lab#rebuild-it" rel="noopener">Rebuild it from the scripts</a></li>
+          <li><a href="https://github.com/Ash5457/ad-lab/tree/main/evidence/transcripts" rel="noopener">PowerShell transcripts</a></li>
+        </ul>
+        <p class="stack">Worked with Active Directory Domain Services, DNS, Group Policy, FSMO roles, repadmin, dcdiag, DFSR and SYSVOL, Windows Server Backup, PowerShell, VMware Workstation and Git.</p>
+
+          <button type="button" class="file-shut" data-close hidden>Close the case file</button>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="case" id="secure-remote-access" aria-labelledby="sra-title">
+      <div class="wrap">
+        <header class="case-head">
+<div class="case-title">
+          <h2 id="sra-title">Secure remote access: RDP from Fedora to Windows 11 over Tailscale and Mullvad</h2>
+          <ul class="case-meta">
+            <li class="state"><span class="dot" aria-hidden="true"></span>Complete</li>
+            <li>October 2026</li>
+            <li><a href="https://github.com/Ash5457/secure-remote-access" rel="noopener">github.com/Ash5457/secure-remote-access</a></li>
+          </ul>
+          </div>
+          <p class="case-lead">An encrypted remote desktop setup that lets my Fedora laptop reach my Windows 11 Pro machine from any public Wi-Fi, without exposing RDP to the internet. Both machines send their internet traffic through Mullvad, so neither the public network nor my home ISP can see what I'm doing.</p>
+        </header>
+
+        <div class="term" role="group" aria-label="Project summary, shown as terminal output">
+          <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/secure-remote-access</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="term-body">
+            <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat secure-remote-access/SUMMARY</p>
+            <div class="summary">
+              <dl>
+                <dt>Access</dt><dd>RDP over Tailscale (WireGuard), NLA on</dd>
+                <dt>Exposure</dt><dd>Port 3389 never forwarded to the internet</dd>
+                <dt>Firewall</dt><dd>RDP allowed only from 100.64.0.0/10</dd>
+                <dt>Egress</dt><dd>Mullvad exit nodes on both machines</dd>
+                <dt>Fallback</dt><dd>SSH SOCKS proxy when a network blocks UDP</dd>
+                <dt>Log</dt><dd>5 issues, each with root cause and fix</dd>
+              </dl>
+              <figure class="diagram">
+                <svg viewBox="0 0 420 262" role="img" aria-labelledby="sra-dia-t sra-dia-d">
+                  <title id="sra-dia-t">Traffic paths in the final setup</title>
+                  <desc id="sra-dia-d">The Fedora laptop on public Wi-Fi connects to the Windows 11 Pro machine at home with RDP over Tailscale. Each machine sends its own internet traffic through a Mullvad exit node.</desc>
+                  <defs>
+                    <marker id="sh-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#3fb950"/></marker>
+                    <marker id="sh-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#bc8cff"/></marker>
+                    <marker id="sh-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#8b949e"/></marker>
+                  </defs>
+                  <rect x="1" y="14" width="150" height="62" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                  <text x="76" y="41" text-anchor="middle" class="name" style="fill:#58a6ff">Fedora laptop</text>
+                  <text x="76" y="60" text-anchor="middle" class="sub">public Wi-Fi</text>
+
+                  <rect x="269" y="14" width="150" height="62" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+                  <text x="344" y="41" text-anchor="middle" class="name" style="fill:#56d364">Windows 11 Pro</text>
+                  <text x="344" y="60" text-anchor="middle" class="sub">home network</text>
+
+                  <path d="M155 45H264" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#sh-g)"/>
+                  <text x="210" y="34" text-anchor="middle" class="lbl" style="fill:#3fb950">RDP over</text>
+                  <text x="210" y="62" text-anchor="middle" class="lbl" style="fill:#3fb950">Tailscale</text>
+
+                  <rect x="135" y="146" width="150" height="56" rx="8" fill="#161b22" stroke="#bc8cff" stroke-width="1.5"/>
+                  <text x="210" y="170" text-anchor="middle" class="name" style="fill:#bc8cff">Mullvad</text>
+                  <text x="210" y="189" text-anchor="middle" class="sub">exit nodes</text>
+
+                  <path d="M76 80 162 142" fill="none" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#sh-p)"/>
+                  <path d="M344 80 258 142" fill="none" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#sh-p)"/>
+                  <text x="62" y="120" text-anchor="middle" class="lbl" style="fill:#bc8cff">browsing</text>
+                  <text x="358" y="120" text-anchor="middle" class="lbl" style="fill:#bc8cff">browsing</text>
+
+                  <path d="M210 206V232" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#sh-s)"/>
+                  <text x="210" y="252" text-anchor="middle" class="sub">Internet</text>
+                </svg>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        <details class="file">
+          <summary><span class="file-label"><span class="when-closed">Open the case file</span><span class="when-open">Close the case file</span></span><span class="file-hint">Decisions, proof and what broke</span><i class="pm" aria-hidden="true"></i></summary>
+          <div class="file-body">
+
+        <h3>Decisions</h3>
+        <div class="decisions">
+          <div>
+            <h4>A private overlay network, not an open port</h4>
+            <p>RDP on TCP 3389 is one of the most attacked services there is, so it is never port-forwarded. I chose Tailscale over raw WireGuard for easier key management, NAT traversal and device management.</p>
+          </div>
+          <div>
+            <h4>Mullvad through Tailscale, not beside it</h4>
+            <p>The standalone Mullvad app and Tailscale both want to own routing, and they fought. Tailscale's Mullvad add-on exposes the same servers as exit nodes, so one network stack manages the private tunnel and the VPN.</p>
+          </div>
+        </div>
+
+        <h3>Proof</h3>
+        <p>Three of the checks behind the setup. Each image opens the full screenshot on GitHub. IPs, usernames and hostnames are redacted.</p>
+        <div class="ledger plain">
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h4>The firewall accepts RDP from Tailscale addresses only</h4>
+              <p>All three Remote Desktop rules are scoped to Tailscale's address range. Windows shows the /10 as a subnet mask.</p>
+              <span class="ledger-cmd"><b>PS&gt;</b> Set-NetFirewallRule -DisplayGroup "Remote Desktop" -RemoteAddress 100.64.0.0/10</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/09-firewall-rule.png" rel="noopener"><img src="assets/images/sra-09-firewall-rule.webp" width="700" height="170" loading="lazy" alt="PowerShell listing three Remote Desktop firewall rules, each with remote address 100.64.0.0 and mask 255.192.0.0"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h4>Port 3389 is blocked on the LAN and open over Tailscale</h4>
+              <p>Tested from the same home network: the Windows machine's LAN address refuses the connection and its Tailscale address accepts it.</p>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/10-lan-blocked-vs-tailscale-open.png" rel="noopener"><img src="assets/images/sra-10-lan-vs-tailscale.webp" width="1300" height="161" loading="lazy" alt="Two port tests from the Fedora terminal: the LAN address returns LAN:BLOCKED and the Tailscale address returns Tailscale: OPEN"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h4>Websites see a Mullvad address</h4>
+              <p>The public IP before and after turning on the Mullvad exit node. The second lookup returns a Mullvad address in place of my own.</p>
+              <span class="ledger-cmd"><b>$</b> curl ifconfig.me</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/15-ip-before-after.png" rel="noopener"><img src="assets/images/sra-15-ip-before-after.webp" width="1102" height="399" loading="lazy" alt="Fedora terminal: curl ifconfig.me with the exit node off shows a redacted address, and with the exit node on shows a different address"></a>
+            </figure>
+          </div>
+        </div>
+        <p class="more"><a href="https://github.com/Ash5457/secure-remote-access#7-verification-checklist" rel="noopener">See the full verification checklist in the README</a></p>
+
+        <h3>What broke</h3>
+        <p>Three of the five issues in the troubleshooting log.</p>
+        <ul class="broke">
+          <li>
+            <h4>Every RDP logon failed after the password prompt</h4>
+            <dl>
+              <dt>Symptom</dt><dd>All FreeRDP variants returned <code>ERRCONNECT_LOGON_FAILURE</code>, with Kerberos errors about a missing KDC for realm <code>GMAIL.COM</code>.</dd>
+              <dt>Cause</dt><dd>The log showed the server's certificate arriving, so the network path, Tailscale and the firewall were all fine. The problem was authentication: a Windows Hello-only sign-in policy, plus using the email address as the username.</dd>
+              <dt>Fix</dt><dd>Turned off Hello-only sign-in, signed in locally once with the password, ran <code>whoami</code> to get the local profile username, and connected with that.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4>Windows dropped off the tailnet when Mullvad was on</h4>
+            <dl>
+              <dt>Symptom</dt><dd>The Windows machine showed as last seen a few minutes ago and became unreachable, though it was still running.</dd>
+              <dt>Cause</dt><dd>Mullvad and Tailscale are both WireGuard-based and both try to control routing and the firewall. Mullvad's firewall blocked Tailscale's traffic, and split tunneling did not reliably exempt it.</dd>
+              <dt>Fix</dt><dd>Retired the standalone Mullvad app and moved to Tailscale's Mullvad add-on. Disconnecting Mullvad had brought the machine straight back, which confirmed the cause first.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4>Nothing loaded on library Wi-Fi with the exit node on</h4>
+            <dl>
+              <dt>Symptom</dt><dd>The internet worked with the exit node off and failed with it on. RDP to the Windows host still worked.</dd>
+              <dt>Cause</dt><dd><code>tailscale netcheck</code> reported <code>UDP: false</code>. WireGuard needs UDP, and the library blocks it. Tailscale fell back to its relays over TCP 443 for my own devices, but the Mullvad exit node could not follow.</dd>
+              <dt>Fix</dt><dd>An SSH SOCKS proxy to the Windows host over the tailnet. Firefox's traffic leaves through the home machine and its Mullvad exit node, and mullvad.net/check passes with no DNS leaks.</dd>
+            </dl>
+          </li>
+        </ul>
+        <p class="more"><a href="https://github.com/Ash5457/secure-remote-access#5-troubleshooting-log" rel="noopener">Read all five in the troubleshooting log</a></p>
+
+        <p class="takeaway"><strong>Debug layer by layer.</strong>Network reachability, transport and authentication fail with different errors. Identifying the layer first saved a lot of guessing.</p>
+
+        <ul class="case-foot">
+          <li><a href="https://github.com/Ash5457/secure-remote-access" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/Ash5457/secure-remote-access#4-implementation" rel="noopener">Implementation steps</a></li>
+          <li><a href="https://github.com/Ash5457/secure-remote-access#6-final-configuration-summary" rel="noopener">Final configuration</a></li>
+        </ul>
+        <p class="stack">Worked with Remote Desktop Protocol, FreeRDP and Remmina, Tailscale and WireGuard, exit node routing, Windows Firewall through PowerShell, Windows sign-in policy, OpenSSH, and Fedora administration with dnf and systemd.</p>
+
+          <button type="button" class="file-shut" data-close hidden>Close the case file</button>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="case" id="fedora-hardening" aria-labelledby="fh-title">
+      <div class="wrap">
+        <header class="case-head">
+<div class="case-title">
+          <h2 id="fh-title">Fedora hardening: auditing my daily-driver laptop, one module at a time</h2>
+          <ul class="case-meta">
+            <li class="state wip"><span class="dot" aria-hidden="true"></span>In progress, 5 of 8 modules published</li>
+            <li>Started October 2026</li>
+            <li><a href="https://github.com/Ash5457/fedora-hardening" rel="noopener">github.com/Ash5457/fedora-hardening</a></li>
+          </ul>
+          </div>
+          <p class="case-lead">I'm auditing and hardening the Fedora laptop I use every day, across eight modules. Each module records what I found, what I changed, how I verified it and how to roll it back.</p>
+        </header>
+
+        <div class="term" role="group" aria-label="Project summary, shown as terminal output">
+          <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/fedora-hardening</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="term-body">
+            <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat fedora-hardening/STATUS</p>
+            <div class="summary">
+              <dl>
+                <dt>Machine</dt><dd>Fedora with Hyprland, btrfs on LUKS2</dd>
+                <dt>Method</dt><dd>Findings, changes, verification, rollback</dd>
+                <dt>Publish</dt><dd>Outputs redacted and scanned for secrets by script</dd>
+                <dt>Latest</dt><dd>05 users and sudo, 2 Nov 2026</dd>
+              </dl>
+              <ol class="modules" aria-label="Modules">
+                <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/01-disk-layout/NOTES.md" rel="noopener">01 disk layout</a><span>published</span></li>
+                <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/02-packages-repos/NOTES.md" rel="noopener">02 packages and repos</a><span>published</span></li>
+                <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/03-journalctl/NOTES.md" rel="noopener">03 journalctl</a><span>published</span></li>
+                <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/NOTES.md" rel="noopener">04 systemd</a><span>published</span></li>
+                <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/05-users-sudo/NOTES.md" rel="noopener">05 users and sudo</a><span>published</span></li>
+                <li>06 firewalld<span>to do</span></li>
+                <li>07 SELinux<span>to do</span></li>
+                <li>08 power<span>to do</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <details class="file">
+          <summary><span class="file-label"><span class="when-closed">Open the case file</span><span class="when-open">Close the case file</span></span><span class="file-hint">Decisions, proof and what broke so far</span><i class="pm" aria-hidden="true"></i></summary>
+          <div class="file-body">
+
+        <h3>Decisions</h3>
+        <div class="decisions">
+          <div>
+            <h4>Drop-in files over edited defaults</h4>
+            <p>Changes go in small drop-in files such as <code>journald.conf.d/50-size.conf</code>. Deleting one file reverses the change, package updates never overwrite it, and anyone can see exactly what I changed.</p>
+          </div>
+          <div>
+            <h4>Nothing is published until a script has checked it</h4>
+            <p>This is my real machine, so every output file is redacted and scanned for secrets by script before it goes to the public repo. The LUKS header backup lives on a USB stick and never in the repo.</p>
+          </div>
+        </div>
+
+        <h3>Proof</h3>
+        <p>Two checks from the published modules. Each image opens the full screenshot on GitHub.</p>
+        <div class="ledger plain">
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h4>Least privilege, tested with a throwaway user</h4>
+              <p>A test user was given exactly one root command. The matching command ran, the same program with different arguments was refused, and reading <code>/etc/shadow</code> was denied. Then I deleted the rule and the user.</p>
+              <span class="ledger-cmd">labuser ALL=(root) /usr/bin/dnf check-update</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/fedora-hardening/blob/main/05-users-sudo/screenshots/05-labuser.png" rel="noopener"><img src="assets/images/fedora-05-labuser.webp" width="1293" height="265" loading="lazy" alt="Terminal as labuser: dnf check-update is allowed, dnf install nano is refused with a not allowed message, and cat /etc/shadow returns permission denied"></a>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h4>The daily backup ran cleanly from its timer</h4>
+              <p>A user-level systemd timer makes a dated, compressed copy of my notes vault every day and keeps the newest 14. I also <a href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/screenshots/04-restore.png" rel="noopener">extracted the newest one</a> to check it, because a backup I have never restored is just a guess.</p>
+              <span class="ledger-cmd"><b>$</b> journalctl --user -u obsidian-backup.service</span>
+            </div>
+            <figure class="proof">
+              <a href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/screenshots/04-backup-ran.png" rel="noopener"><img src="assets/images/fedora-04-backup-ran.webp" width="1300" height="146" loading="lazy" alt="journalctl output for obsidian-backup.service showing the service starting, the script reporting backup done, and the service finishing"></a>
+            </figure>
+          </div>
+        </div>
+
+        <h3>What broke</h3>
+        <p>Two problems from the modules published so far.</p>
+        <ul class="broke">
+          <li>
+            <h4>The first backup run failed, and that was good</h4>
+            <dl>
+              <dt>Symptom</dt><dd>The backup service failed on its first run.</dd>
+              <dt>Cause</dt><dd>The script still had a placeholder for the vault folder name, so <code>tar</code> could not find it.</dd>
+              <dt>Fix</dt><dd>Replaced the placeholder with the real folder name. The script starts with <code>set -euo pipefail</code>, so it stopped at the error and did not report a successful backup of nothing.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4>sudo rejected my new rules file</h4>
+            <dl>
+              <dt>Symptom</dt><dd><code>visudo -c</code> reported bad permissions on <code>/etc/sudoers.d/10-hardening</code> and asked for mode 0440.</dd>
+              <dt>Cause</dt><dd>sudo refuses rule files that look writable, because anyone who can write a sudoers file can give themselves root.</dd>
+              <dt>Fix</dt><dd>Set the owner to root and the mode to 0440, then confirmed the new defaults were in effect with <code>sudo -l</code>.</dd>
+            </dl>
+          </li>
+        </ul>
+
+        <ul class="case-foot">
+          <li><a href="https://github.com/Ash5457/fedora-hardening" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/Ash5457/fedora-hardening/tree/main/scripts" rel="noopener">Redaction and publish scripts</a></li>
+        </ul>
+        <p class="stack">Worked with LUKS2 and cryptsetup, btrfs, dnf and repo auditing, journald, systemd units and timers, sudoers, and Bash.</p>
+
+          <button type="button" class="file-shut" data-close hidden>Close the case file</button>
+          </div>
+        </details>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="section" id="background" aria-labelledby="bg-title">
+    <div class="wrap">
+      <h2 class="section-title" id="bg-title">Background</h2>
+      <div class="bg-grid">
+        <div>
+          <h3>Experience</h3>
+          <ol class="roles">
+            <li>
+              <p class="when">Sep 2025 to Dec 2025</p>
+              <div>
+                <h4>Store Manager</h4>
+                <p class="org">Techy Company Canada, Aurora, Ontario</p>
+                <ul>
+                  <li>Handled 50+ client interactions a day across hardware diagnostics, service estimates and technical consultations.</li>
+                  <li>Owned 40+ open repair tickets at a time, tracking each from intake through resolution and client handoff.</li>
+                  <li>Explained hardware and software diagnoses to non-technical clients in plain language.</li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <p class="when">Oct 2024 to Mar 2025</p>
+              <div>
+                <h4>Junior Tech Repair Specialist</h4>
+                <p class="org">The Cell Shop on George St, Peterborough, Ontario</p>
+                <ul>
+                  <li>Diagnosed and repaired 300+ client devices at component level: smartphones, laptops and peripherals.</li>
+                  <li>Documented symptoms, diagnostic steps and resolutions for 500+ intakes, building a repair history clients and colleagues could reference.</li>
+                  <li>Installed and configured Windows and macOS on 15+ client machines, including drivers, updates and user data migration.</li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <p class="when">Mar 2024 to Jan 2025</p>
+              <div>
+                <h4>VP of Operations/Logistics</h4>
+                <p class="org">Hack Trent, Trent University's hackathon</p>
+                <ul>
+                  <li>Directed logistics for a 36-hour hackathon with 400 participants, 15 mentors and 15 sponsors.</li>
+                  <li>Led a four-person logistics team through an 11-month planning cycle, and ran the schedule and escalation paths on event day.</li>
+                  <li>Allocated a $15,000 operating budget across venue, vendor and participant costs, and closed the event within budget.</li>
+                </ul>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="side">
+          <h3>Certifications</h3>
+          <ul class="creds">
+            <li><b>CompTIA A+</b><span>Certified October 2026, valid to October 2029</span></li>
+            <li><b>TryHackMe Cyber Security 101</b><span>Certificate, September 2025</span></li>
+            <li class="next"><b>Microsoft AZ-104, Azure Administrator</b><span>Next exam</span></li>
+          </ul>
+
+          <h3>Education</h3>
+          <ul class="creds">
+            <li><b>Bachelor of Computing Systems</b><span>Trent University, 2021 to 2025</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <h2 id="contact-title">I'm available now for help desk, desktop support and field service roles.</h2>
+          <p class="lead">I'm based in Keswick with my own vehicle and can travel across York Region and the GTA. Email is the fastest way to reach me.</p>
+          <div class="actions">
+            <a class="btn" href="mailto:akashbahl1926@gmail.com">Email me</a>
+          </div>
+        </div>
+
+        <div class="term" role="group" aria-label="Contact details, shown as terminal output">
+          <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="term-body">
+            <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~</span>$ ./contact.sh</p>
+            <dl class="reach">
+              <dt>Email</dt><dd><a id="email-text" href="mailto:akashbahl1926@gmail.com">akashbahl1926@gmail.com</a><button type="button" class="copy" data-copy="akashbahl1926@gmail.com" aria-live="polite" hidden>Copy</button></dd>
+              <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">linkedin.com/in/akashbahl-toronto</a></dd>
+              <dt>GitHub</dt><dd><a href="https://github.com/Ash5457" rel="me noopener">github.com/Ash5457</a></dd>
+              <dt>Base</dt><dd>Keswick, ON · York Region and GTA</dd>
+              <dt>Status</dt><dd><span class="dot" aria-hidden="true"></span>Open to full-time roles · Available immediately</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="mark">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g2)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl, Keswick, Ontario</span>
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">LinkedIn</a>
+      <a href="#main">Back to top</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* Case files: reveal the bottom "close" buttons (they need JS) and wire them up. */
+document.querySelectorAll("[data-close]").forEach(function (btn) {
+  btn.hidden = false;
+  btn.addEventListener("click", function () {
+    var file = btn.closest("details");
+    file.open = false;
+    file.closest(".case").scrollIntoView({ block: "start" });
+    file.querySelector("summary").focus({ preventScroll: true });
+  });
+});
+/* Copy-email button: shown only where the clipboard is available. */
+(function () {
+  var btn = document.querySelector("[data-copy]");
+  if (!btn || !navigator.clipboard) return;
+  btn.hidden = false;
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(btn.getAttribute("data-copy")).then(function () {
+      btn.textContent = "Copied";
+      setTimeout(function () { btn.textContent = "Copy"; }, 1800);
+    }).catch(function () {
+      var range = document.createRange();
+      range.selectNodeContents(document.getElementById("email-text"));
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  });
+})();
+</script>
+</body>
+</html>
