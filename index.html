@@ -327,6 +327,52 @@ code{font-family:var(--mono);font-size:.92em;color:var(--strong)}
   .reach{grid-template-columns:minmax(0,1fr);gap:0}
   .reach dd{margin-bottom:.6rem}
 }
+
+/* ---- print and Save as PDF ----
+   Browsers drop backgrounds on paper, so the page switches to the light
+   counterpart of the same palette and tightens into a document. */
+.print-only{display:none}
+@page{margin:13mm 12mm}
+@media print{
+  :root{color-scheme:light;--bg:#fff;--surface:#f6f8fa;--line:#d0d7de;--text:#1f2328;--strong:#0d1117;--muted:#57606a;--green:#1a7f37;--green-hi:#1a7f37;--teal:#1b7c83;--blue:#0969da;--amber:#9a6700;--red:#cf222e;--purple:#8250df;--slate:#8c959f}
+  html{font-size:12.5px}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .skip,.site-nav,.btn,.copy,.file-shut,.site-foot nav,.file:not([open]){display:none!important}
+  .print-only{display:inline}
+  a{color:inherit;text-decoration-color:var(--line)}
+  .term-bar,.term-bar .dots i,.dot,.swatches i,.modules li::before,.ledger-cmd{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .site-head .wrap{padding-block:0 .6rem}
+  .hero{padding-block:1.2rem 1.4rem}
+  .hero h1{font-size:2.3rem;max-width:none}
+  .hero h1 span{display:inline}
+  .hero-grid{margin-top:1.1rem;gap:1.1rem}
+  .lead{max-width:none}
+  .actions{margin-top:.6rem}
+  .case,.section{padding-block:1rem}
+  .case .term{margin-top:.8rem}
+  .term-body{padding:.9rem 1.1rem}
+  .case-lead{margin-top:.7rem}
+  .summary{grid-template-columns:minmax(0,1fr) 17rem;gap:1rem 1.5rem;align-items:center}
+  .summary:has(.modules){grid-template-columns:minmax(0,1fr) 21rem;align-items:start}
+  .bg-grid{margin-top:.8rem;gap:1.5rem 2.5rem;grid-template-columns:minmax(0,7fr) minmax(0,4fr)}
+  .contact-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:1rem 2rem;align-items:center}
+  .roles,.creds{margin-top:.6rem}
+  .roles>li{grid-template-columns:8.5rem minmax(0,1fr)}
+  .roles ul{margin-top:.5rem;gap:.25rem}
+  .creds li{padding-block:.6rem}
+  .side h3:not(:first-child){margin-top:1.5rem}
+  .roles>li{padding-block:.8rem}
+  .file{border:0;background:none;margin-top:1rem}
+  .file>summary{display:none}
+  .file-body{padding:0}
+  .proof a{background:none}
+  /* diagrams: light boxes, dark labels, the coloured strokes stay */
+  .diagram rect{fill:#f6f8fa}
+  .diagram .name{fill:#0d1117!important}
+  .diagram .sub,.diagram .lbl{fill:#57606a!important}
+  h1,h2,h3,h4,.case-head,.file-body h3 + p{break-after:avoid}
+  .case-head,.term,.roles>li,.creds li,.ledger-row,.broke>li,.contact-grid>div,.site-foot{break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -968,7 +1014,7 @@ code{font-family:var(--mono);font-size:.92em;color:var(--strong)}
           <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
         </g>
       </svg>
-      <span>Akash Bahl, Keswick, Ontario</span>
+      <span>Akash Bahl, Keswick, Ontario<span class="print-only">, ash5457.github.io</span></span>
     </div>
     <nav aria-label="Footer">
       <a href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
