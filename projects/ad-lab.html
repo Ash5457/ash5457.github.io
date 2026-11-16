@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Directory lab | Akash Bahl</title>
+<meta name="description" content="An Active Directory domain built from PowerShell scripts on Server 2016 and migrated side by side to Server 2025, with screenshots and a log of what went wrong.">
+<link rel="canonical" href="https://ash5457.github.io/projects/ad-lab.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Active Directory lab | Akash Bahl">
+<meta property="og:description" content="An Active Directory domain built from PowerShell scripts on Server 2016 and migrated side by side to Server 2025, with screenshots and a log of what went wrong.">
+<meta property="og:locale" content="en_CA">
+<meta property="og:url" content="https://ash5457.github.io/projects/ad-lab.html">
+<meta property="og:image" content="https://ash5457.github.io/assets/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/RedHatDisplay-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/RedHatText-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Akash Bahl, home">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../#projects">Projects</a>
+      <a class="opt" href="../#background">Background</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="mailto" href="mailto:akashbahl1926@gmail.com">Email</a>
+      <a href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="wrap">
+    <p class="crumb"><a href="../#projects">All projects</a></p>
+
+    <header class="page-head">
+      <h1>Active Directory lab</h1>
+      <p class="page-sub">A scripted build, then a Server 2016 to 2025 migration</p>
+      <ul class="meta"><li class="state"><span class="dot" aria-hidden="true"></span>Finished October 2026</li><li>3 VMs on one laptop</li></ul>
+      <div class="intro">
+          <p>I built an Active Directory domain from PowerShell scripts on Windows Server 2016, then migrated it side by side to Server 2025. After each stage I ran a check and only carried on once it passed.</p>
+          <p>Everything I claim in the repo links to a screenshot or a PowerShell transcript.</p>
+      </div>
+      <p class="actions"><a class="btn" href="https://github.com/Ash5457/ad-lab" rel="noopener">View on GitHub</a></p>
+    </header>
+
+    <div class="term" role="group" aria-label="Project summary, shown as terminal output">
+      <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/ad-lab</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+      <div class="term-body">
+        <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat ad-lab/SUMMARY</p>
+        <div class="summary">
+          <dl>
+            <dt>Build</dt><dd>PowerShell, rebuilt from the repo</dd>
+            <dt>Migrate</dt><dd>Side by side, all five FSMO roles</dd>
+            <dt>Verify</dt><dd>repadmin · dcdiag · scream test</dd>
+            <dt>Schema</dt><dd>87 to 91, forest at Windows2025</dd>
+            <dt>Log</dt><dd>11 problems, each with root cause and proof</dd>
+            <dt>Host</dt><dd>3 VMs on a 16 GB laptop, VMware Workstation</dd>
+          </dl>
+          <figure class="diagram">
+              <svg viewBox="0 0 420 262" role="img" aria-labelledby="ad-dia-t ad-dia-d">
+                <title id="ad-dia-t">Lab topology after the migration</title>
+                <desc id="ad-dia-d">DC01 on Server 2016 handed all five FSMO roles to DC02 on Server 2025 and was demoted. CLIENT01 on Windows 11 logs on and gets Group Policy from DC02. All three sit on an isolated host-only network.</desc>
+                <defs>
+                  <marker id="ah-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#3fb950"/></marker>
+                  <marker id="ah-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#58a6ff"/></marker>
+                </defs>
+                <rect x="1" y="28" width="148" height="66" rx="8" fill="#161b22" stroke="#484f58" stroke-width="1.5"/>
+                <text x="75" y="57" text-anchor="middle" class="name">DC01</text>
+                <text x="75" y="77" text-anchor="middle" class="sub">Server 2016</text>
+                <text x="75" y="114" text-anchor="middle" class="lbl" style="fill:#f85149">demoted</text>
+                <rect x="271" y="28" width="148" height="66" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+                <text x="345" y="57" text-anchor="middle" class="name" style="fill:#56d364">DC02</text>
+                <text x="345" y="77" text-anchor="middle" class="sub">Server 2025</text>
+                <path d="M153 61H266" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ah-g)"/>
+                <text x="210" y="50" text-anchor="middle" class="lbl" style="fill:#3fb950">5 FSMO roles</text>
+                <rect x="271" y="176" width="148" height="66" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                <text x="345" y="205" text-anchor="middle" class="name" style="fill:#58a6ff">CLIENT01</text>
+                <text x="345" y="225" text-anchor="middle" class="sub">Windows 11</text>
+                <path d="M345 172V99" fill="none" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#ah-b)"/>
+                <text x="335" y="140" text-anchor="end" class="lbl" style="fill:#58a6ff">logon + GPO</text>
+                <text x="1" y="205" class="sub">10.1.10.0/24</text>
+                <text x="1" y="225" class="sub">host-only, no internet</text>
+              </svg>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <section class="block">
+      <h2>Why I did it this way</h2>
+      <div class="decisions">
+        <div>
+          <h3>A side-by-side migration</h3>
+          <p>An in-place upgrade would have been quicker. I went side by side so the old domain controller stayed up as a fallback until the new one had passed the replication checks, the role transfer and the scream test.</p>
+        </div>
+        <div>
+          <h3>Snapshots of both servers together</h3>
+          <p>Once two domain controllers are replicating, reverting just one of them to an older snapshot causes a USN rollback, which silently breaks replication. So from the point DC02 was promoted, I shut both down and snapshotted them as a pair.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>How I know it worked</h2>
+      <p>The migration had twelve steps. These are four of them, with the screenshot for each.</p>
+      <div class="ledger">
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Step 4 of 12</p>
+              <h3>Replication was healthy in both directions</h3>
+              <p>Before moving any roles I ran repadmin. Both domain controllers showed 0 failures out of 5, as a source and as a destination.</p>
+              <span class="cmd-chip"><b>PS&gt;</b> repadmin /replsummary</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/ad-lab-06-replsummary.webp" width="645" height="305" loading="lazy" alt="repadmin /replsummary output on DC02: DC01 and DC02 each show 0 fails out of 5 as source and as destination">
+              <figcaption>
+                <span class="path">evidence/06-replsummary.png</span>
+                <a class="gh" href="https://github.com/Ash5457/ad-lab/blob/main/evidence/06-replsummary.png" rel="noopener" aria-label="View on GitHub: replication summary screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Step 8 of 12</p>
+              <h3>All five FSMO roles moved to DC02</h3>
+              <p>I checked who held the roles, moved all five with one command, then checked again.</p>
+              <span class="cmd-chip"><b>PS&gt;</b> netdom query fsmo</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/ad-lab-09-fsmo.webp" width="860" height="435" loading="lazy" alt="PowerShell on DC02: netdom query fsmo lists all five roles on DC01, the move command runs, and a second query lists all five roles on DC02">
+              <figcaption>
+                <span class="path">evidence/09-fsmo-before-and-after.png</span>
+                <a class="gh" href="https://github.com/Ash5457/ad-lab/blob/main/evidence/09-fsmo-before-and-after.png" rel="noopener" aria-label="View on GitHub: FSMO roles before and after screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Step 9 of 12</p>
+              <h3>Scream test with DC01 switched off</h3>
+              <p>With the old domain controller powered off, a domain user could still log on at the client, and Group Policy came from DC02.</p>
+              <span class="cmd-chip"><b>PS&gt;</b> gpresult /r</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/ad-lab-10-scream-test.webp" width="685" height="405" loading="lazy" alt="gpresult /r on CLIENT01 for user areyes, with the line Group Policy was applied from DC02.deadeye5457.com highlighted">
+              <figcaption>
+                <span class="path">evidence/10-client-on-dc02.png</span>
+                <a class="gh" href="https://github.com/Ash5457/ad-lab/blob/main/evidence/10-client-on-dc02.png" rel="noopener" aria-label="View on GitHub: scream test screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Step 11 of 12</p>
+              <h3>Domain and forest raised to Windows2025</h3>
+              <p>This one can't be undone, so I left it until DC01 was demoted and DC02 had already come through a crash.</p>
+              <span class="cmd-chip"><b>PS&gt;</b> Get-ADDomain | Format-Table DNSRoot, DomainMode</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/ad-lab-12-funclevel.webp" width="882" height="260" loading="lazy" alt="Get-ADDomain shows DomainMode Windows2025Domain and Get-ADForest shows ForestMode Windows2025Forest for deadeye5457.com">
+              <figcaption>
+                <span class="path">evidence/12-funclevel-raised.png</span>
+                <a class="gh" href="https://github.com/Ash5457/ad-lab/blob/main/evidence/12-funclevel-raised.png" rel="noopener" aria-label="View on GitHub: functional level screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      <p class="more"><a href="https://github.com/Ash5457/ad-lab#part-2-the-side-by-side-migration" rel="noopener">All twelve steps are in the README</a></p>
+    </section>
+
+    <section class="block">
+      <h2>What went wrong</h2>
+      <p>Three of the eleven problems I hit.</p>
+      <ul class="broke">
+          <li>
+            <h3>DC02 blue-screened partway through</h3>
+            <dl>
+              <dt>What I saw</dt><dd><code>dcdiag</code> showed DC02 had rebooted after bugcheck <code>0x7A</code>. Its second parameter, <code>0xc0000185</code>, is an I/O device error, so I looked at the host's storage first.</dd>
+              <dt>Cause</dt><dd>The VMs are on an external SSD over USB. The drive dropped out for a moment and DC02's virtual disk disappeared mid-read.</dd>
+              <dt>Fix</dt><dd>I turned off USB power management for that port and plugged the SSD in directly. Before carrying on I checked the Directory Service log for database corruption events and found none.</dd>
+            </dl>
+          </li>
+          <li>
+            <h3>dcdiag failed almost everything after the promotion</h3>
+            <dl>
+              <dt>What I saw</dt><dd>DFSREvent, KccEvent, Services, SystemLog and ObjectsReplicated all failed on both domain controllers.</dd>
+              <dt>Cause</dt><dd>Most of it was noise from running in a VM. Two failures were real: replication hadn't caught up yet, and DC01's firewall was blocking remote event log reads.</dd>
+              <dt>Fix</dt><dd>I went through the failures one at a time and fixed the two real ones. Then I confirmed with <code>repadmin</code>, the SYSVOL share and event 4604 before touching the roles.</dd>
+            </dl>
+          </li>
+          <li>
+            <h3>Demoting DC01 left stale DNS behind</h3>
+            <dl>
+              <dt>What I saw</dt><dd>After the demotion, the <code>_msdcs</code> delegation still listed DC01 as its only name server.</dd>
+              <dt>Cause</dt><dd>That delegation was created with the forest on DC01, and promoting DC02 never updated it.</dd>
+              <dt>Fix</dt><dd>I added a delegation to DC02, removed DC01's record, and checked that no NS or SRV records still pointed at the old server.</dd>
+            </dl>
+          </li>
+        </ul>
+      <p class="more"><a href="https://github.com/Ash5457/ad-lab/blob/main/TROUBLESHOOTING.md" rel="noopener">All eleven are in the troubleshooting log</a></p>
+    </section>
+
+    <section class="block">
+      <h2>What I learned</h2>
+      <div class="prose">
+        <p>PowerShell can do almost everything I used to click through, and it leaves a transcript behind as proof.</p>
+        <p>I also learned to check before any step I can't undo. I didn't move the roles until replication was proven, didn't demote DC01 until the scream test passed, and didn't raise the functional level until DC02 had come through a crash.</p>
+        <p>Going side by side caught a mistake of my own too. I built a Task Manager GPO by hand without noticing the script had already made one, so the HR OU had two GPOs doing the same job until a link check caught it.</p>
+      </div>
+      <ul class="links">
+        <li><a href="https://github.com/Ash5457/ad-lab#rebuild-it" rel="noopener">Rebuild it from the scripts</a></li>
+        <li><a href="https://github.com/Ash5457/ad-lab/tree/main/evidence/transcripts" rel="noopener">PowerShell transcripts</a></li>
+      </ul>
+      <p class="tools">Tools: Active Directory Domain Services, DNS, Group Policy, repadmin, dcdiag, Windows Server Backup, PowerShell, VMware Workstation.</p>
+    </section>
+
+      <nav class="pager" aria-label="More projects">
+        <a class="prev" href="../#projects"><span>Back to</span><b>All projects</b></a>
+        <a class="next" href="secure-remote-access.html"><span>Next project</span><b>Secure remote access</b></a>
+      </nav>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="mark">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g2)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl, Keswick, Ontario<span class="print-only">, ash5457.github.io</span></span>
+    </div>
+    <a href="mailto:akashbahl1926@gmail.com">akashbahl1926@gmail.com</a>
+  </div>
+</footer>
+</body>
+</html>

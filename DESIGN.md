@@ -1,87 +1,57 @@
-# Design System: akashbahl.com
+# Design notes
 
-## Overview
+A dark, left-aligned site that borrows from the terminal header on my GitHub profile. Body text is a sans face. Monospace is only used where a terminal would print the text: prompts, commands, file paths and the key and value rows.
 
-A case file with a terminal voice. The page is laid out like an evidence file: left-aligned, one statement headline, then projects presented as claims with their proof beside them. The terminal from the GitHub and LinkedIn headers appears as one framed object per section (the fastfetch summary in the hero, one summary block per project). Prose is set in a sans face. Monospace is used only where a terminal would really print the text: prompts, commands, file names, key and value output.
+The home page is short: who I am, three project previews, and my background. Each project has its own page.
 
-Audience: recruiters and hiring managers for help desk, desktop support and field service roles, who give the page well under a minute, plus technical interviewers who will click through to the evidence.
+## Colours
 
-## Colors
-
-Taken from `scripts/build_header.py` in the profile repo. Dark only, by brand.
+Taken from `scripts/build_header.py` in the profile repo. Dark only on screen.
 
 | Token | HEX | Use |
 |---|---|---|
 | `--bg` | `#0d1117` | Page and terminal body |
-| `--surface` | `#161b22` | Terminal title bar, command chips |
-| `--line` | `#30363d` | All borders and rules, 1px |
+| `--surface` | `#161b22` | Terminal title bar, command chips, image caption bar |
+| `--line` | `#30363d` | Every border and rule, 1px |
 | `--strong` | `#f0f6fc` | Headings |
 | `--text` | `#c9d1d9` | Body text |
-| `--muted` | `#8b949e` | Captions, secondary nav |
-| `--green` | `#3fb950` | Primary action, prompt, keys, done or live |
-| `--green-hi` to `--teal` | `#56d364` to `#39c5cf` | Wordmark gradient only |
+| `--muted` | `#8b949e` | Captions, dates, labels |
+| `--green` | `#3fb950` | Main button, prompt, keys, finished |
+| `--green-hi` to `--teal` | `#56d364` to `#39c5cf` | ASH wordmark gradient only |
 | `--blue` | `#58a6ff` | Links and focus ring |
 | `--amber` | `#d29922` | In progress, next |
-| `--red` | `#f85149` | Window close dot, failures in evidence copy |
+| `--red` | `#f85149` | Window close dot |
 
-Rules:
-- Green means done or live. Amber means in progress. Never swap them for decoration.
-- The gradient belongs to the ASH wordmark and nowhere else. No gradient text, no glow.
-- Contrast: body text 12:1, muted text 6:1, button label on green 7:1.
+Green means finished or live and amber means in progress. The gradient is only for the wordmark.
 
-## Typography
+## Type
 
-One superfamily, self-hosted as variable WOFF2 (SIL OFL): the Red Hat typefaces, chosen because the brand prompt is `ash@fedora`.
+Red Hat Display for headings, Red Hat Text for body, Red Hat Mono for terminal text. All three are self-hosted variable fonts.
 
-| Role | Face | Size | Weight | Notes |
-|---|---|---|---|---|
-| Statement (h1) | Red Hat Display | clamp 2.35rem to 4.5rem | 700 | line-height 1.03, tracking -0.032em |
-| Section (h2) | Red Hat Display | clamp 1.75rem to 2.5rem | 700 | tracking -0.025em |
-| Claim (h3) | Red Hat Display | 1.375rem | 600 | |
-| Body | Red Hat Text | 1.0625rem | 400 | line-height 1.62, measure 52 to 62ch |
-| Lead | Red Hat Text | 1.1875rem | 400 | |
-| Terminal | Red Hat Mono | 0.875 to 0.9375rem | 400 and 700 | prompts, commands, key and value rows |
-
-Rules:
-- No eyebrow labels above headings. No all-caps labels.
-- Headings use `text-wrap: balance`, body uses `text-wrap: pretty`.
-- Fallback stacks: Segoe UI and system-ui for sans, DejaVu Sans Mono, Menlo and Consolas for mono.
+- Home headline: clamp 2.35rem to 4.5rem, weight 700
+- Project page title: clamp 2.1rem to 3.5rem, weight 700
+- Section headings: clamp 1.6rem to 2.25rem
+- Body: 1.0625rem, line-height 1.62, lines kept under about 64 characters
 
 ## Layout
 
-- Content width 73.75rem, side gutter 1.25rem minimum.
-- Left aligned throughout. Nothing is centered.
-- Spacing scale on a 4px base: 4, 8, 12, 16, 24, 32, 48, 72, 112.
-- Breakpoints: 56rem (hero and ledger stack to one column), 34rem (phone: terminal rows stack, nav shows section links only).
-- More space above a heading than below it. Sections are separated by a 1px rule, not by background bands.
+- Content width 73.75rem, side gutter at least 1.25rem.
+- Everything is left aligned.
+- Breakpoints: 56rem (two-column layouts stack), 40rem (header drops the name and the Background link), 34rem (phone).
+- Flat. Borders are 1px, there are no shadows. Radius is 10px on terminal windows and cards, 6px on buttons and images.
 
-## Elevation and Shapes
+## Parts
 
-- Flat. Elevation is a 1px `--line` border only. No shadows.
-- Radius: 10px on terminal windows, 6px on buttons and evidence images, 4px on command chips. No pills.
-
-## Components
-
-- **Wordmark.** ASH drawn as pixel blocks in inline SVG with the green to teal gradient. Used in the header, the favicon (letter A) and the closing section.
-- **Terminal window.** Title bar on `--surface` with a centered muted title and three dots at the right (two slate, one red). Body on `--bg`. One prompt line, then output. Used once per section at most.
-- **fastfetch block.** Photo in the logo slot, then `ash@Ash5457`, a short rule, key and value rows (keys green and bold), and the 8 colour swatch strip.
-- **Case file ledger.** One row per claim: step number (only where the steps are a real sequence), the claim as a heading, one or two sentences, an optional command chip, and the proof image at the right linking to the full screenshot on GitHub.
-- **Primary button.** Green fill, dark label, 6px radius. One per screen.
-- **Links.** Blue, 1px underline that thickens on hover.
+- **Header.** Sticky, solid background. Wordmark, section links, then Email, GitHub and LinkedIn so contact is always in view.
+- **Terminal window.** Title bar with three dots, one prompt line, then output. Used for the fastfetch summary on the home page and one summary per project page.
+- **Project card.** A small terminal window holding the project's diagram, with the status, title, two or three sentences and the tools underneath. The whole card links to the project page.
+- **Proof row.** A claim on the left and the screenshot on the right. Under the image is a bar with the file's path in the repo and a "View on GitHub" button. Rows from a real sequence are labelled, for example "Step 4 of 12".
+- **What went wrong.** A heading, then what I saw, the cause and the fix.
 
 ## Motion
 
-One authored moment: on load, `fastfetch` types itself and the output prints row by row, as in the GitHub header. CSS only, about 1.6 seconds, and only when `prefers-reduced-motion` allows it. Everything is visible at rest and without JavaScript. No scroll-triggered fades.
+One animation: on the home page `fastfetch` types itself and the output prints. It is CSS only and is skipped when the visitor has reduced motion turned on.
 
-## Do and Don't
+## Writing
 
-Do:
-- Put the proof next to the claim.
-- Crop evidence screenshots to the relevant window and link to the untouched original.
-- Keep every number and date traceable to a repo, a certificate or the resume.
-
-Don't:
-- Use mono for body copy.
-- Add cards, shadows, glow or glass.
-- Add a fake interactive shell.
-- State a qualification, employer, metric or tool experience the source material does not support.
+First person, plain, and specific. If a sentence only sounds good, it gets cut. Every number and date has to match the repos or my resume.

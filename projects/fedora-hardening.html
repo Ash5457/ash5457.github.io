@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fedora hardening | Akash Bahl</title>
+<meta name="description" content="Auditing and hardening a daily-driver Fedora laptop in eight parts. Five are published so far, each with findings, changes, verification and rollback.">
+<link rel="canonical" href="https://ash5457.github.io/projects/fedora-hardening.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fedora hardening | Akash Bahl">
+<meta property="og:description" content="Auditing and hardening a daily-driver Fedora laptop in eight parts. Five are published so far, each with findings, changes, verification and rollback.">
+<meta property="og:locale" content="en_CA">
+<meta property="og:url" content="https://ash5457.github.io/projects/fedora-hardening.html">
+<meta property="og:image" content="https://ash5457.github.io/assets/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/RedHatDisplay-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/RedHatText-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Akash Bahl, home">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../#projects">Projects</a>
+      <a class="opt" href="../#background">Background</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="mailto" href="mailto:akashbahl1926@gmail.com">Email</a>
+      <a href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="wrap">
+    <p class="crumb"><a href="../#projects">All projects</a></p>
+
+    <header class="page-head">
+      <h1>Fedora hardening</h1>
+      <p class="page-sub">Going through my everyday laptop, one area at a time</p>
+      <ul class="meta"><li class="state wip"><span class="dot" aria-hidden="true"></span>In progress, 5 of 8 parts published</li><li>Started October 2026</li></ul>
+      <div class="intro">
+          <p>This is the Fedora laptop I use every day. I'm working through it in eight parts, and for each one I write down what I found, what I changed, how I checked it and how to undo it.</p>
+      </div>
+      <p class="actions"><a class="btn" href="https://github.com/Ash5457/fedora-hardening" rel="noopener">View on GitHub</a></p>
+    </header>
+
+    <div class="term" role="group" aria-label="Project status, shown as terminal output">
+      <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/fedora-hardening</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+      <div class="term-body">
+        <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat fedora-hardening/STATUS</p>
+        <div class="summary">
+          <dl>
+            <dt>Machine</dt><dd>Fedora with Hyprland, btrfs on LUKS2</dd>
+            <dt>Method</dt><dd>Findings, changes, verification, rollback</dd>
+            <dt>Publish</dt><dd>Outputs redacted and scanned for secrets by script</dd>
+            <dt>Latest</dt><dd>05 users and sudo, 2 Nov 2026</dd>
+          </dl>
+          <ol class="modules" aria-label="The eight parts">
+            <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/01-disk-layout/NOTES.md" rel="noopener">01 disk layout</a><span>published</span></li>
+            <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/02-packages-repos/NOTES.md" rel="noopener">02 packages and repos</a><span>published</span></li>
+            <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/03-journalctl/NOTES.md" rel="noopener">03 journalctl</a><span>published</span></li>
+            <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/NOTES.md" rel="noopener">04 systemd</a><span>published</span></li>
+            <li class="done"><a href="https://github.com/Ash5457/fedora-hardening/blob/main/05-users-sudo/NOTES.md" rel="noopener">05 users and sudo</a><span>published</span></li>
+            <li>06 firewalld<span>to do</span></li>
+            <li>07 SELinux<span>to do</span></li>
+            <li>08 power<span>to do</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <section class="block">
+      <h2>Why I did it this way</h2>
+      <div class="decisions">
+        <div>
+          <h3>Drop-in files for every change</h3>
+          <p>I put changes in small drop-in files like <code>journald.conf.d/50-size.conf</code> and leave the defaults alone. Deleting the file undoes the change, package updates don't overwrite it, and it's easy to see exactly what I touched.</p>
+        </div>
+        <div>
+          <h3>A script checks everything before it's published</h3>
+          <p>This is my real machine, so every output file is redacted and scanned for secrets by a script before it goes in the public repo. The LUKS header backup is on a USB stick and stays out of the repo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>How I know it worked</h2>
+      <p>Two checks from the parts published so far.</p>
+      <div class="ledger">
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Part 05, users and sudo</p>
+              <h3>One sudo rule, tested with a throwaway user</h3>
+              <p>I gave a test user exactly one root command. That command ran, <code>dnf</code> with different arguments was refused, and reading <code>/etc/shadow</code> was denied. Then I deleted the rule and the user.</p>
+              <span class="cmd-chip">labuser ALL=(root) /usr/bin/dnf check-update</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/fedora-05-labuser.webp" width="1293" height="265" loading="lazy" alt="Terminal as labuser: dnf check-update is allowed, dnf install nano is refused with a not allowed message, and cat /etc/shadow returns permission denied">
+              <figcaption>
+                <span class="path">05-users-sudo/screenshots/05-labuser.png</span>
+                <a class="gh" href="https://github.com/Ash5457/fedora-hardening/blob/main/05-users-sudo/screenshots/05-labuser.png" rel="noopener" aria-label="View on GitHub: sudo test screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <p class="step">Part 04, systemd</p>
+              <h3>The daily backup runs from a timer</h3>
+              <p>A user-level systemd timer makes a dated, compressed copy of my notes vault every day and keeps the newest 14. I also <a href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/screenshots/04-restore.png" rel="noopener">extracted the newest one</a> to make sure it restores.</p>
+              <span class="cmd-chip"><b>$</b> journalctl --user -u obsidian-backup.service</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/fedora-04-backup-ran.webp" width="1300" height="146" loading="lazy" alt="journalctl output for obsidian-backup.service showing the service starting, the script reporting backup done, and the service finishing">
+              <figcaption>
+                <span class="path">04-systemd/screenshots/04-backup-ran.png</span>
+                <a class="gh" href="https://github.com/Ash5457/fedora-hardening/blob/main/04-systemd/screenshots/04-backup-ran.png" rel="noopener" aria-label="View on GitHub: backup service log screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+    </section>
+
+    <section class="block">
+      <h2>What went wrong</h2>
+      <p>Two problems so far.</p>
+      <ul class="broke">
+          <li>
+            <h3>The first backup run failed</h3>
+            <dl>
+              <dt>What I saw</dt><dd>The backup service failed the first time it ran.</dd>
+              <dt>Cause</dt><dd>I'd left a placeholder in the script where the vault folder name goes, so <code>tar</code> couldn't find it.</dd>
+              <dt>Fix</dt><dd>I put in the real folder name. The script starts with <code>set -euo pipefail</code>, so it stopped at the error and didn't report a successful backup of nothing.</dd>
+            </dl>
+          </li>
+          <li>
+            <h3>sudo rejected my new rules file</h3>
+            <dl>
+              <dt>What I saw</dt><dd><code>visudo -c</code> complained about the permissions on <code>/etc/sudoers.d/10-hardening</code> and asked for mode 0440.</dd>
+              <dt>Cause</dt><dd>sudo won't load a rules file that looks writable, because anyone who can write to it can give themselves root.</dd>
+              <dt>Fix</dt><dd>I set the owner to root and the mode to 0440, then checked the new defaults with <code>sudo -l</code>.</dd>
+            </dl>
+          </li>
+        </ul>
+    </section>
+
+    <section class="block">
+      <h2>What's left</h2>
+      <div class="prose">
+        <p>Three parts to go: firewalld, SELinux and power. I'll update this page as each one is published.</p>
+      </div>
+      <ul class="links">
+        <li><a href="https://github.com/Ash5457/fedora-hardening/tree/main/scripts" rel="noopener">Redaction and publish scripts</a></li>
+      </ul>
+      <p class="tools">Tools so far: LUKS2 and cryptsetup, btrfs, dnf, journald, systemd units and timers, sudoers, Bash.</p>
+    </section>
+
+      <nav class="pager" aria-label="More projects">
+        <a class="prev" href="secure-remote-access.html"><span>Previous project</span><b>Secure remote access</b></a>
+        <a class="next" href="../#projects"><span>Back to</span><b>All projects</b></a>
+      </nav>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="mark">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g2)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl, Keswick, Ontario<span class="print-only">, ash5457.github.io</span></span>
+    </div>
+    <a href="mailto:akashbahl1926@gmail.com">akashbahl1926@gmail.com</a>
+  </div>
+</footer>
+</body>
+</html>

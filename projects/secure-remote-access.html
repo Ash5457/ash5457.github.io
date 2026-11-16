@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secure remote access | Akash Bahl</title>
+<meta name="description" content="Remote desktop from a Fedora laptop to a Windows 11 machine over Tailscale, with RDP never exposed to the internet and both machines using Mullvad exit nodes.">
+<link rel="canonical" href="https://ash5457.github.io/projects/secure-remote-access.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Secure remote access | Akash Bahl">
+<meta property="og:description" content="Remote desktop from a Fedora laptop to a Windows 11 machine over Tailscale, with RDP never exposed to the internet and both machines using Mullvad exit nodes.">
+<meta property="og:locale" content="en_CA">
+<meta property="og:url" content="https://ash5457.github.io/projects/secure-remote-access.html">
+<meta property="og:image" content="https://ash5457.github.io/assets/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/RedHatDisplay-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/RedHatText-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Akash Bahl, home">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../#projects">Projects</a>
+      <a class="opt" href="../#background">Background</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="mailto" href="mailto:akashbahl1926@gmail.com">Email</a>
+      <a href="https://github.com/Ash5457" rel="me noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/akashbahl-toronto/" rel="me noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="wrap">
+    <p class="crumb"><a href="../#projects">All projects</a></p>
+
+    <header class="page-head">
+      <h1>Secure remote access</h1>
+      <p class="page-sub">RDP from Fedora to Windows 11 over Tailscale and Mullvad</p>
+      <ul class="meta"><li class="state"><span class="dot" aria-hidden="true"></span>Finished October 2026</li><li>Fedora ThinkPad and a Windows 11 laptop</li></ul>
+      <div class="intro">
+          <p>I'd just installed Fedora on my ThinkPad and needed to remote into my Windows 11 laptop at home. I used to do this with Chrome Remote Desktop on Kali. That didn't carry over cleanly to Fedora, so I used the switch as a chance to build something more secure that I actually understood.</p>
+          <p>What I ended up with is an RDP session over Tailscale that works from public Wi-Fi, with port 3389 never opened to the internet. Both machines send the rest of their traffic through Mullvad.</p>
+      </div>
+      <p class="actions"><a class="btn" href="https://github.com/Ash5457/secure-remote-access" rel="noopener">View on GitHub</a></p>
+    </header>
+
+    <div class="term" role="group" aria-label="Project summary, shown as terminal output">
+      <div class="term-bar" aria-hidden="true">
+            <span class="title">ash@fedora: ~/projects/secure-remote-access</span>
+            <span class="dots"><i></i><i></i><i></i></span>
+          </div>
+      <div class="term-body">
+        <p class="prompt" aria-hidden="true"><b>ash@fedora</b>:<span class="path">~/projects</span>$ cat secure-remote-access/SUMMARY</p>
+        <div class="summary">
+          <dl>
+            <dt>Access</dt><dd>RDP over Tailscale (WireGuard), NLA on</dd>
+            <dt>Exposure</dt><dd>Port 3389 never forwarded to the internet</dd>
+            <dt>Firewall</dt><dd>RDP allowed only from 100.64.0.0/10</dd>
+            <dt>Egress</dt><dd>Mullvad exit nodes on both machines</dd>
+            <dt>Fallback</dt><dd>SSH SOCKS proxy when a network blocks UDP</dd>
+            <dt>Log</dt><dd>5 issues, each with root cause and fix</dd>
+          </dl>
+          <figure class="diagram">
+              <svg viewBox="0 0 420 262" role="img" aria-labelledby="sra-dia-t sra-dia-d">
+                <title id="sra-dia-t">Traffic paths in the finished setup</title>
+                <desc id="sra-dia-d">The Fedora laptop on public Wi-Fi connects to the Windows 11 Pro laptop at home with RDP over Tailscale. Each machine sends its other internet traffic through a Mullvad exit node.</desc>
+                <defs>
+                  <marker id="sh-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#3fb950"/></marker>
+                  <marker id="sh-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#bc8cff"/></marker>
+                  <marker id="sh-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#8b949e"/></marker>
+                </defs>
+                <rect x="1" y="14" width="150" height="62" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                <text x="76" y="41" text-anchor="middle" class="name" style="fill:#58a6ff">Fedora laptop</text>
+                <text x="76" y="60" text-anchor="middle" class="sub">public Wi-Fi</text>
+                <rect x="269" y="14" width="150" height="62" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+                <text x="344" y="41" text-anchor="middle" class="name" style="fill:#56d364">Windows 11 Pro</text>
+                <text x="344" y="60" text-anchor="middle" class="sub">home network</text>
+                <path d="M155 45H264" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#sh-g)"/>
+                <text x="210" y="34" text-anchor="middle" class="lbl" style="fill:#3fb950">RDP over</text>
+                <text x="210" y="62" text-anchor="middle" class="lbl" style="fill:#3fb950">Tailscale</text>
+                <rect x="135" y="146" width="150" height="56" rx="8" fill="#161b22" stroke="#bc8cff" stroke-width="1.5"/>
+                <text x="210" y="170" text-anchor="middle" class="name" style="fill:#bc8cff">Mullvad</text>
+                <text x="210" y="189" text-anchor="middle" class="sub">exit nodes</text>
+                <path d="M76 80 162 142" fill="none" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#sh-p)"/>
+                <path d="M344 80 258 142" fill="none" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#sh-p)"/>
+                <text x="62" y="120" text-anchor="middle" class="lbl" style="fill:#bc8cff">browsing</text>
+                <text x="358" y="120" text-anchor="middle" class="lbl" style="fill:#bc8cff">browsing</text>
+                <path d="M210 206V232" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#sh-s)"/>
+                <text x="210" y="252" text-anchor="middle" class="sub">Internet</text>
+              </svg>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <section class="block">
+      <h2>Why I did it this way</h2>
+      <div class="decisions">
+        <div>
+          <h3>No open RDP port</h3>
+          <p>RDP on port 3389 is one of the most attacked services there is, so I never forward it. I picked Tailscale over plain WireGuard because it handles the keys, NAT traversal and device management for me.</p>
+        </div>
+        <div>
+          <h3>Mullvad through Tailscale</h3>
+          <p>I started with the standalone Mullvad app running next to Tailscale. Both want to control routing, and they fought each other. Tailscale's Mullvad add-on offers the same servers as exit nodes, so now one tool handles the private tunnel and the VPN.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>How I know it worked</h2>
+      <p>Three of the checks I ran. IPs, usernames and hostnames are redacted in the screenshots.</p>
+      <div class="ledger">
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h3>The firewall only accepts RDP from Tailscale addresses</h3>
+              <p>All three Remote Desktop rules are limited to Tailscale's address range. Windows displays the /10 as a subnet mask.</p>
+              <span class="cmd-chip"><b>PS&gt;</b> Set-NetFirewallRule -DisplayGroup "Remote Desktop" -RemoteAddress 100.64.0.0/10</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/sra-09-firewall-rule.webp" width="700" height="170" loading="lazy" alt="PowerShell listing three Remote Desktop firewall rules, each with remote address 100.64.0.0 and mask 255.192.0.0">
+              <figcaption>
+                <span class="path">screenshots/09-firewall-rule.png</span>
+                <a class="gh" href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/09-firewall-rule.png" rel="noopener" aria-label="View on GitHub: firewall rule screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h3>Port 3389 is closed on the LAN and open over Tailscale</h3>
+              <p>I ran both tests from inside my home network. The LAN address refused the connection and the Tailscale address accepted it.</p>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/sra-10-lan-vs-tailscale.webp" width="1300" height="161" loading="lazy" alt="Two port tests from the Fedora terminal: the LAN address returns LAN:BLOCKED and the Tailscale address returns Tailscale: OPEN">
+              <figcaption>
+                <span class="path">screenshots/10-lan-blocked-vs-tailscale-open.png</span>
+                <a class="gh" href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/10-lan-blocked-vs-tailscale-open.png" rel="noopener" aria-label="View on GitHub: port test screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="ledger-row">
+            <div class="ledger-claim">
+              <h3>Websites see a Mullvad address</h3>
+              <p>My public IP before and after switching the exit node on. The second lookup returns a Mullvad address.</p>
+              <span class="cmd-chip"><b>$</b> curl ifconfig.me</span>
+            </div>
+            <figure class="proof">
+              <img src="../assets/images/sra-15-ip-before-after.webp" width="1102" height="399" loading="lazy" alt="Fedora terminal: curl ifconfig.me with the exit node off shows a redacted address, and with the exit node on shows a different address">
+              <figcaption>
+                <span class="path">screenshots/15-ip-before-after.png</span>
+                <a class="gh" href="https://github.com/Ash5457/secure-remote-access/blob/main/screenshots/15-ip-before-after.png" rel="noopener" aria-label="View on GitHub: public IP before and after screenshot"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 1.5H2A.5.5 0 0 0 1.5 2v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.5M7 1.5h3.5V5M10.5 1.5 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>View on GitHub</a>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      <p class="more"><a href="https://github.com/Ash5457/secure-remote-access#7-verification-checklist" rel="noopener">The full verification checklist is in the README</a></p>
+    </section>
+
+    <section class="block">
+      <h2>What went wrong</h2>
+      <p>Three of the five issues I hit.</p>
+      <ul class="broke">
+          <li>
+            <h3>Every RDP logon failed after the password prompt</h3>
+            <dl>
+              <dt>What I saw</dt><dd>Every FreeRDP variant returned <code>ERRCONNECT_LOGON_FAILURE</code>, along with Kerberos errors about a missing KDC for realm <code>GMAIL.COM</code>.</dd>
+              <dt>Cause</dt><dd>The log showed the server's certificate arriving, which meant the network, Tailscale and the firewall were all fine and the problem was authentication. Windows was set to Hello-only sign-in, and I was using my email address as the username.</dd>
+              <dt>Fix</dt><dd>I turned off Hello-only sign-in and signed in locally once with the password. Then I ran <code>whoami</code> to get the local username and connected with that.</dd>
+            </dl>
+          </li>
+          <li>
+            <h3>Windows dropped off the tailnet when Mullvad was on</h3>
+            <dl>
+              <dt>What I saw</dt><dd>The Windows laptop showed as last seen a few minutes ago and couldn't be reached, even though it was still running.</dd>
+              <dt>Cause</dt><dd>Mullvad and Tailscale are both built on WireGuard, and both try to manage routing and the firewall. Mullvad's firewall was blocking Tailscale's traffic, and split tunneling didn't reliably exempt it.</dd>
+              <dt>Fix</dt><dd>Disconnecting Mullvad brought the laptop straight back, which confirmed the cause. I removed the standalone app and switched to Tailscale's Mullvad add-on.</dd>
+            </dl>
+          </li>
+          <li>
+            <h3>Nothing loaded on library Wi-Fi with the exit node on</h3>
+            <dl>
+              <dt>What I saw</dt><dd>The internet worked with the exit node off and failed with it on. RDP to the Windows laptop still worked.</dd>
+              <dt>Cause</dt><dd><code>tailscale netcheck</code> reported <code>UDP: false</code>. WireGuard needs UDP and the library blocks it. Tailscale fell back to its relays over TCP 443 for my own devices, but the Mullvad exit node couldn't do the same.</dd>
+              <dt>Fix</dt><dd>I run an SSH SOCKS proxy to the Windows laptop over the tailnet, so Firefox's traffic leaves through home and its Mullvad exit node. mullvad.net/check passes with no DNS leaks.</dd>
+            </dl>
+          </li>
+        </ul>
+      <p class="more"><a href="https://github.com/Ash5457/secure-remote-access#5-troubleshooting-log" rel="noopener">All five are in the troubleshooting log</a></p>
+    </section>
+
+    <section class="block">
+      <h2>What I learned</h2>
+      <div class="prose">
+        <p>Network reachability, transport and authentication all fail with different errors. Working out which layer was broken first saved me a lot of guessing, and the certificate in the FreeRDP log is what told me the network was fine.</p>
+        <p>I also understand now that Tailscale and Mullvad do different jobs. Tailscale connects my devices to each other, and Mullvad hides my traffic from everyone else.</p>
+      </div>
+      <ul class="links">
+        <li><a href="https://github.com/Ash5457/secure-remote-access#4-implementation" rel="noopener">Implementation steps</a></li>
+        <li><a href="https://github.com/Ash5457/secure-remote-access#6-final-configuration-summary" rel="noopener">Final configuration</a></li>
+      </ul>
+      <p class="tools">Tools: Remote Desktop Protocol, FreeRDP and Remmina, Tailscale and WireGuard, Mullvad exit nodes, Windows Firewall through PowerShell, OpenSSH, Fedora.</p>
+    </section>
+
+      <nav class="pager" aria-label="More projects">
+        <a class="prev" href="ad-lab.html"><span>Previous project</span><b>Active Directory lab</b></a>
+        <a class="next" href="fedora-hardening.html"><span>Next project</span><b>Fedora hardening</b></a>
+      </nav>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="mark">
+      <svg viewBox="0 0 76 20" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="ash-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56d364"/><stop offset="1" stop-color="#39c5cf"/></linearGradient></defs>
+        <g fill="url(#ash-g2)">
+          <path d="M0 0h20v20h-4v-8H4v8H0zm4 4v4h12V4z"/>
+          <path d="M28 0h20v4H32v4h16v12H28v-4h16v-4H28z"/>
+          <path d="M56 0h4v8h12V0h4v20h-4v-8H60v8h-4z"/>
+        </g>
+      </svg>
+      <span>Akash Bahl, Keswick, Ontario<span class="print-only">, ash5457.github.io</span></span>
+    </div>
+    <a href="mailto:akashbahl1926@gmail.com">akashbahl1926@gmail.com</a>
+  </div>
+</footer>
+</body>
+</html>
